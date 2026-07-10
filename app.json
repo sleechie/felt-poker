@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Felt Poker",
+    "slug": "felt",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/felt-icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#090D18",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.bradensanders.felt",
+      "buildNumber": "1"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#090D18",
+        "foregroundImage": "./assets/felt-icon.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/felt-icon.png"
+    },
+    "plugins": [
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "enableBackgroundPlayback": false
+        }
+      ],
+      "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#090D18",
+          "image": "./assets/felt-splash.png",
+          "imageWidth": 180,
+          "resizeMode": "contain",
+          "dark": {
+            "backgroundColor": "#090D18",
+            "image": "./assets/felt-splash.png"
+          }
+        }
+      ]
+    ]
+  }
+}
