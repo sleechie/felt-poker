@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import * as Haptics from 'expo-haptics';
+import * as SplashScreen from 'expo-splash-screen';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeIn } from 'react-native-reanimated';
@@ -16,6 +17,8 @@ import { decideBotAction } from './src/game/npc';
 import { GameState, PokerAction } from './src/game/types';
 import { loadGame, loadSettings, saveGame, saveSettings } from './src/game/storage';
 import { GameSound, useGameSounds } from './src/hooks/useGameSounds';
+
+SplashScreen.setOptions({ duration: 350, fade: true });
 
 function HeaderToggle({ active, label, icon, onPress }: { active: boolean; label: string; icon: string; onPress: () => void }) {
   return (

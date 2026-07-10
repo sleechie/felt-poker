@@ -140,6 +140,13 @@ function beginHand(base: GameState, dealerIndex: number, rng: () => number): Gam
     lastActionId: base.lastActionId + 1,
   };
   state.activePlayerIndex = orderedPending(state, preflopStart);
+  const soleActor = state.pendingPlayerIds.length === 1
+    ? state.players.find((player) => player.id === state.pendingPlayerIds[0])
+    : undefined;
+  // If blind posting leaves nobody with a decision, run the board immediately.
+  if (state.pendingPlayerIds.length === 0 || (soleActor && soleActor.streetBet >= state.currentBet)) {
+    return finishRound(state);
+  }
   return state;
 }
 
@@ -217,7 +224,19 @@ function dealStreet(state: GameState, street: Street, cardCount: number): void {
   state.message = street[0].toUpperCase() + street.slice(1);
 }
 
+function returnUncalledBet(state: GameState): number {
+  const ordered = [...state.players].sort((left, right) => right.committed - left.committed);
+  if (ordered.length < 2 || ordered[0].committed <= ordered[1].committed) return 0;
+  const refund = ordered[0].committed - ordered[1].committed;
+  ordered[0].committed -= refund;
+  ordered[0].streetBet = Math.max(0, ordered[0].streetBet - refund);
+  ordered[0].chips += refund;
+  ordered[0].allIn = ordered[0].chips === 0;
+  return refund;
+}
+
 function settle(state: GameState): GameState {
+  returnUncalledBet(state);
   const totalPot = potSize(state);
   const live = state.players.filter((player) => !player.folded && player.committed > 0);
   const payouts: Record<string, number> = {};

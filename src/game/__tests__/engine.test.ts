@@ -42,6 +42,8 @@ describe('holdem game engine', () => {
     state = applyAction(state, 'luna', { type: 'fold' });
     state = applyAction(state, 'miles', { type: 'fold' });
     expect(state.result?.winnerIds).toEqual(['hero']);
+    expect(state.result?.pot).toBe(25);
+    expect(state.players.find((player) => player.id === 'hero')?.chips).toBe(615);
     expect(state.players.reduce((sum, player) => sum + player.chips, 0)).toBe(2400);
   });
 
@@ -77,6 +79,46 @@ describe('holdem game engine', () => {
     expect(state.players.find((player) => player.id === 'hero')?.chips).toBe(150);
     expect(state.players.find((player) => player.id === 'luna')?.chips).toBe(100);
     expect(state.players.reduce((sum, player) => sum + player.chips, 0)).toBe(550);
+  });
+
+  it('returns an unmatched all-in overage instead of inflating the pot', () => {
+    let state = createGame(seededRandom(15));
+    state = applyAction(state, 'rook', { type: 'raise', amount: 100 });
+    state.players.find((player) => player.id === 'hero')!.chips = 40;
+    state = applyAction(state, 'hero', { type: 'call' });
+    state = applyAction(state, 'luna', { type: 'fold' });
+    state = applyAction(state, 'miles', { type: 'fold' });
+
+    expect(state.result?.pot).toBe(95);
+    expect(state.players.find((player) => player.id === 'rook')?.chips).toBeGreaterThanOrEqual(500);
+    expect(state.players.reduce((sum, player) => sum + player.chips, 0)).toBe(1840);
+  });
+
+  it('runs the board when both remaining players are all-in from the blinds', () => {
+    const completed = playPassiveHand();
+    completed.players.forEach((player) => { player.chips = 0; });
+    completed.players[0].chips = 10;
+    completed.players[1].chips = 5;
+
+    const next = startNextHand(completed, seededRandom(91));
+    expect(next.activePlayerIndex).toBeNull();
+    expect(next.board).toHaveLength(5);
+    expect(next.result?.pot).toBe(10);
+    expect(next.players.reduce((sum, player) => sum + player.chips, 0)).toBe(15);
+  });
+
+  it('still asks for a decision when the lone live stack owes an all-in blind', () => {
+    const completed = playPassiveHand();
+    completed.players.forEach((player) => { player.chips = 0; });
+    completed.players[0].chips = 8;
+    completed.players[1].chips = 20;
+
+    const next = startNextHand(completed, seededRandom(92));
+    expect(next.players[next.activePlayerIndex!].id).toBe('luna');
+    expect(getLegalActions(next, 'luna').callAmount).toBe(3);
+    const called = applyAction(next, 'luna', { type: 'call' });
+    expect(called.board).toHaveLength(5);
+    expect(called.result?.pot).toBe(16);
   });
 
   it('keeps chips conserved across randomized complete matches', () => {

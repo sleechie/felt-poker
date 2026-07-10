@@ -38,11 +38,7 @@
           "backgroundColor": "#090D18",
           "image": "./assets/felt-splash.png",
           "imageWidth": 180,
-          "resizeMode": "contain",
-          "dark": {
-            "backgroundColor": "#090D18",
-            "image": "./assets/felt-splash.png"
-          }
+          "resizeMode": "contain"
         }
       ]
     ]
