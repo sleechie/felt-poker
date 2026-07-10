@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { applyAction, createGame, getLegalActions, potSize, startNextHand } from '../engine';
-import { seededRandom } from '../deck';
+import { cardId, seededRandom } from '../deck';
+import { Card, Rank, Suit } from '../types';
+
+const card = (rank: Rank, suit: Suit): Card => ({ id: cardId(rank, suit), rank, suit });
 
 function playPassiveHand() {
   let state = createGame(seededRandom(42));
@@ -47,6 +50,33 @@ describe('holdem game engine', () => {
     const next = startNextHand(completed, seededRandom(84));
     expect(next.handNumber).toBe(2);
     expect(next.dealerIndex).toBe(1);
+  });
+
+  it('pays the main pot and side pot to their correct winners', () => {
+    let state = createGame(seededRandom(5));
+    state.players[0].hole = [card(14, 'clubs'), card(14, 'diamonds')];
+    state.players[1].hole = [card(13, 'clubs'), card(13, 'diamonds')];
+    state.players[2].hole = [card(12, 'clubs'), card(12, 'diamonds')];
+    state.players[3].hole = [card(11, 'clubs'), card(11, 'diamonds')];
+    state.players[0].chips = 50;
+    state.players[1].chips = 95;
+    state.players[2].chips = 190;
+    state.players[3].chips = 200;
+    state.deck = [
+      card(9, 'clubs'), card(7, 'spades'), card(8, 'spades'), card(6, 'spades'),
+      card(4, 'hearts'), card(3, 'diamonds'), card(2, 'clubs'), card(5, 'spades'),
+    ];
+
+    state = applyAction(state, 'rook', { type: 'fold' });
+    state = applyAction(state, 'hero', { type: 'raise', amount: 50 });
+    state = applyAction(state, 'luna', { type: 'raise', amount: 100 });
+    state = applyAction(state, 'miles', { type: 'call' });
+
+    expect(state.result?.pot).toBe(250);
+    expect(state.result?.payouts).toMatchObject({ hero: 150, luna: 100 });
+    expect(state.players.find((player) => player.id === 'hero')?.chips).toBe(150);
+    expect(state.players.find((player) => player.id === 'luna')?.chips).toBe(100);
+    expect(state.players.reduce((sum, player) => sum + player.chips, 0)).toBe(550);
   });
 
   it('keeps chips conserved across randomized complete matches', () => {

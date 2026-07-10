@@ -36,7 +36,7 @@ npm run verify
 npm run doctor
 ```
 
-The pure TypeScript poker engine is isolated under `src/game`, including seeded simulations that play 24 complete randomized matches and assert chip conservation after every action.
+The pure TypeScript poker engine is isolated under `src/game`, including explicit side-pot settlement coverage and seeded simulations that play 24 complete randomized matches while asserting chip conservation after every action.
 
 ## Product rules
 
