@@ -44,8 +44,8 @@ export function GameTable({ state, onContinue }: GameTableProps) {
           <View style={styles.board}>
             {[0, 1, 2, 3, 4].map((index) => (
               state.board[index]
-                ? <CardView key={state.board[index].id} card={state.board[index]} delay={index * 65} />
-                : <CardView key={`slot-${index}`} placeholder />
+                ? <CardView key={state.board[index].id} card={state.board[index]} delay={index * 65} testID={`board-card-${index}`} />
+                : <CardView key={`slot-${index}`} placeholder testID={`board-slot-${index}`} />
             ))}
           </View>
           <Text style={styles.message}>{state.message}</Text>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import * as Haptics from 'expo-haptics';
 import * as SplashScreen from 'expo-splash-screen';
@@ -40,6 +40,7 @@ function PokerApp() {
   const [soundOn, setSoundOn] = useState(true);
   const [equity, setEquity] = useState<EquityResult | null>(null);
   const [hydrated, setHydrated] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const playSound = useGameSounds(soundOn);
   const previousStreet = useRef(game.street);
   const previousPhase = useRef(game.phase);
@@ -145,6 +146,14 @@ function PokerApp() {
               setShowOdds((value) => !value);
             }} />
             <HeaderToggle active={soundOn} label="SOUND" icon="♪" onPress={() => setSoundOn((value) => !value)} />
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="About and privacy"
+              onPress={() => setAboutOpen(true)}
+              style={({ pressed }) => [styles.infoButton, pressed && { opacity: 0.72 }]}
+            >
+              <Text style={styles.infoText}>i</Text>
+            </Pressable>
           </View>
         </View>
 
@@ -173,6 +182,26 @@ function PokerApp() {
           )}
         </View>
       </SafeAreaView>
+      <Modal visible={aboutOpen} transparent animationType="fade" onRequestClose={() => setAboutOpen(false)}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.aboutCard}>
+            <Text style={styles.aboutEyebrow}>FELT POKER · 1.0</Text>
+            <Text style={styles.aboutTitle}>Private by design.</Text>
+            <Text style={styles.aboutBody}>
+              Felt has no accounts, analytics, ads, tracking, purchases, or network requests. Your game and settings stay on this device and are removed when you delete the app.
+            </Text>
+            <Text style={styles.aboutDetail}>Single-player Texas Hold’em · 5 / 10 blinds · 600-chip stacks</Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Close about and privacy"
+              onPress={() => setAboutOpen(false)}
+              style={({ pressed }) => [styles.doneButton, pressed && { transform: [{ scale: 0.98 }] }]}
+            >
+              <Text style={styles.doneText}>Done</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
       <StatusBar style="light" />
     </LinearGradient>
   );
@@ -194,8 +223,18 @@ const styles = StyleSheet.create({
   toggleIcon: { color: colors.muted, fontSize: 12, fontWeight: '900' },
   toggleLabel: { color: colors.muted, fontSize: 8, fontWeight: '900', letterSpacing: 0.8 },
   toggleTextActive: { color: colors.mint },
+  infoButton: { width: 34, height: 34, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.backgroundSoft, borderRadius: radii.pill, borderWidth: 1, borderColor: colors.border },
+  infoText: { color: colors.muted, fontSize: 13, fontWeight: '900', fontStyle: 'italic' },
   controls: { minHeight: 88, paddingTop: 7 },
   waiting: { height: 58, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
   thinkingDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.amber },
   waitingText: { color: colors.muted, fontSize: 11, fontWeight: '700' },
+  modalBackdrop: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, backgroundColor: 'rgba(3,6,12,0.78)' },
+  aboutCard: { width: '100%', maxWidth: 350, padding: 24, backgroundColor: colors.backgroundSoft, borderRadius: radii.large, borderWidth: 1, borderColor: colors.border },
+  aboutEyebrow: { color: colors.mint, fontSize: 9, fontWeight: '900', letterSpacing: 1.7 },
+  aboutTitle: { color: colors.white, fontSize: 25, fontWeight: '900', letterSpacing: -0.7, marginTop: 9 },
+  aboutBody: { color: '#CED3DD', fontSize: 13, lineHeight: 19, fontWeight: '600', marginTop: 12 },
+  aboutDetail: { color: colors.muted, fontSize: 10, lineHeight: 15, fontWeight: '700', marginTop: 14 },
+  doneButton: { height: 48, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.mint, borderRadius: radii.medium, marginTop: 22 },
+  doneText: { color: '#09251E', fontSize: 14, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 0.6 },
 });

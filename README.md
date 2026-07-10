@@ -47,3 +47,7 @@ The pure TypeScript poker engine is isolated under `src/game`, including explici
 - Equity is Monte Carlo pot share against unknown random holdings. It is a learning estimate, not certainty and not an Elo rating.
 
 See [docs/NPC_MODEL.md](docs/NPC_MODEL.md) for the opponent model and its intentional limits.
+
+## App Store package
+
+`store/` contains a complete English metadata draft, the no-data-collection privacy policy, submission answers, and three visually verified 1290 × 2796 screenshots. The only intentionally blank release fields are the final public privacy/support URLs and pricing choice.

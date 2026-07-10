@@ -58,11 +58,18 @@ export function countImmediateOuts(hole: Card[], board: Card[]): number | null {
   const currentCards = [...hole, ...board];
   const current = evaluateBest(currentCards);
   const knownIds = new Set(currentCards.map((card) => card.id));
+  const holeIds = new Set(hole.map((card) => card.id));
   return createDeck()
     .filter((card) => !knownIds.has(card.id))
     .filter((card) => {
       const next = evaluateBest([...currentCards, card]);
-      return next.category > current.category;
+      if (next.category <= current.category) return false;
+      if (!next.cards.some((bestCard) => bestCard.id === card.id)) return false;
+      if (!next.cards.some((bestCard) => holeIds.has(bestCard.id))) return false;
+      // Pairing the board improves everyone's category and is not a personal out.
+      const onlyPairsBoard = next.category < 4
+        && board.some((boardCard) => boardCard.rank === card.rank)
+        && !hole.some((holeCard) => holeCard.rank === card.rank);
+      return !onlyPairsBoard;
     }).length;
 }
-

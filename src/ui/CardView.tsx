@@ -11,6 +11,7 @@ interface CardViewProps {
   placeholder?: boolean;
   size?: CardSize;
   delay?: number;
+  testID?: string;
 }
 
 const RANK_LABEL: Record<number, string> = {
@@ -26,15 +27,16 @@ const dimensions = {
   hero: { width: 64, height: 90 },
 };
 
-export function CardView({ card, hidden = false, placeholder = false, size = 'board', delay = 0 }: CardViewProps) {
+export function CardView({ card, hidden = false, placeholder = false, size = 'board', delay = 0, testID }: CardViewProps) {
   const dimension = dimensions[size];
   if (placeholder) {
-    return <View style={[styles.placeholder, dimension]} />;
+    return <View testID={testID} style={[styles.placeholder, dimension]} />;
   }
 
   if (hidden || !card) {
     return (
       <Animated.View
+        testID={testID}
         entering={FadeInDown.delay(delay).springify().damping(15)}
         layout={LinearTransition.springify()}
         style={[styles.card, styles.back, dimension, size === 'mini' && styles.miniRadius]}
@@ -49,6 +51,7 @@ export function CardView({ card, hidden = false, placeholder = false, size = 'bo
   const isRed = card.suit === 'hearts' || card.suit === 'diamonds';
   return (
     <Animated.View
+      testID={testID}
       entering={FlipInEasyY.delay(delay).springify().damping(16)}
       layout={LinearTransition.springify()}
       style={[styles.card, dimension, size === 'mini' && styles.miniRadius]}
@@ -84,4 +87,3 @@ const styles = StyleSheet.create({
   backMark: { width: '42%', aspectRatio: 1, backgroundColor: 'rgba(9,13,24,0.48)', transform: [{ rotate: '45deg' }], borderRadius: 2 },
   placeholder: { borderWidth: 1, borderColor: 'rgba(255,255,255,0.13)', borderRadius: radii.small, backgroundColor: 'rgba(255,255,255,0.025)' },
 });
-

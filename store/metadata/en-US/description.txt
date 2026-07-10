@@ -1,0 +1,17 @@
+Poker without the casino noise.
+
+Felt is a focused, single-player Texas Hold’em table built for quick games and better instincts. There are no accounts, ads, currencies, daily rewards, purchases, or internet connection. Open the app and play.
+
+THREE DISTINCT OPPONENTS
+Luna applies selective pressure. Miles protects his stack. Rook embraces variance. Each opponent estimates unseen-card equity, considers the pot price, and adapts to how often you fold, call, and raise.
+
+LEARN WHILE YOU PLAY
+Toggle Odds at any point in a hand to see your estimated equity, current made hand, pot odds, and immediate drawing outs. Turn it off for a completely clean table.
+
+REAL NO-LIMIT HOLD’EM
+Play a four-handed tournament with rotating blinds, all-ins, side pots, eliminations, and complete showdown rules.
+
+BUILT TO FEEL GOOD
+Responsive card animation, subtle haptics, and original card, chip, fold, and win sounds make every action satisfying without slowing down the game.
+
+Everything stays on your device. Your table is waiting.

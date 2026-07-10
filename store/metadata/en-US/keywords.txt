@@ -1,0 +1,1 @@
+texas holdem,offline,solo,cards,odds,equity,trainer,no limit,practice,tournament,casino
